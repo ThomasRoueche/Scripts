@@ -1,4 +1,4 @@
-#How-to GIT
+# How-to GIT
 
 En HTTPS
 https://github.com/ThomasRoueche/Test2.git
@@ -15,13 +15,13 @@ git push -u origin master
 git remote add origin https://github.com/ThomasRoueche/Test2.git
 git push -u origin master
 
-##Depuis Github avec un dépot existant
+## Depuis Github avec un dépot existant
 
 
 
 
 
-##Références
+## Références
 https://confluence.atlassian.com/bitbucketserver/basic-git-commands-776639767.html
 https://www.atlassian.com/git/tutorials/atlassian-git-cheatsheet
 https://www.kernel.org/pub/software/scm/git/docs/giteveryday.html
