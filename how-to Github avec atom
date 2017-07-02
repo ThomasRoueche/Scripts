@@ -1,0 +1,24 @@
+# How-to Github avec Atom
+
+Configurtaion d'un dépot github dans Atom
+Cmd-Shift-P
+github:clone
+Une nouvelle fenêtre apparait
+copier l'url du dépot
+
+Prendre en comptes ses modifications
+Cmd-Shift-P
+github:stage all changes
+une icone bleu apparait sur les nouveaux fichiers
+
+Commiter ses changements
+github:commit
+un écran apparait en bas à droite dans le panneau latéral "Git"
+mettre un message et cliquer sur "Commit"
+
+Envoyer ses modification
+github:push
+
+
+##Références
+1-http://flight-manual.atom.io/using-atom/sections/github-package/
