@@ -2,7 +2,7 @@ $noop(1--------------------------------------------------)
 $noop(=== Define root folder : Qobuz or FLAC or MP3 ===)
 
 
-$if($eq(%website%,Qobuz.com),$set(_RootFolder,Qobuz),$set(_RootFolder,$upper(%_extension%)))
+$if($eq(%website%,Qobuz.com),$set(_RootFolder,Qobuz))
 
 
 $noop(2--------------------------------------------------)
@@ -35,7 +35,9 @@ $noop(
     Type is based on releasetype : Album, Compilation, Live, Other
     )
 
-$noop(Define type)
+$noop(Define type, pour classer les albums par type dans le répertoire d'un artiste)
+$noop(ne devra s'appliquer qu'aux albums hors musique classique, Game, film & anime soundtracks)
+
 $set(_DiscType,Other)
 $if($in(%releasetype%,album),$set(_DiscType,Album) )
 $if($in(%releasetype%,compilation),$set(_DiscType,Compilation) )
@@ -50,12 +52,23 @@ $if(%originalyear%, $set(_OldestAlbumDate,$left(%originalyear%,4) - %album%/),
     )
 )
 
+
+$noop(Build format & quality informations label)
+$set(_AlbumQuality,[%_extension%-$div(%_sample_rate%,100)K-%_bits_per_sample%b])
+$set(%album%,%album% - %_AlbumQuality%)
+
+
 $noop(If grouping is used
 $set(_Group,$if(%grouping%,%grouping%/))
 )
+
+$noop(begin build folders name)
 $set(_SubFolder,
     $if2(%albumartist%,%artist%)/%_DiscType%/%_OldestAlbumDate%
     )
+
+$noop(pour un genre spécifique nous ne voulons pas de segmenttaions par type de release et de date de release d'album)
+$noop(donc on reset la variable SubFolder avec le nom de l'album tout simplement)
 
 $if($eq(%_GenreFolder%,Compilations), $set(_SubFolder,%album%/) )
 $if($eq(%_GenreFolder%,Anime soundtrack), $set(_SubFolder,%album%/) )
