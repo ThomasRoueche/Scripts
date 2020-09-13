@@ -1,0 +1,89 @@
+$noop(1--------------------------------------------------)
+$noop(=== Define root folder : Qobuz or FLAC or MP3 ===)
+
+
+$if($eq(%website%,Qobuz.com),$set(_RootFolder,Qobuz),$set(_RootFolder,$upper(%_extension%)))
+
+
+$noop(2--------------------------------------------------)
+$noop(=== Define Genre folder : ===)
+$noop(
+    Default location : Artists
+    Conditional location for Classic, Compilations, Anime Soundtrack, Film Soundtrack and Game Soundtrack
+    )
+
+$set(_GenreFolder,Artists/)
+
+$if($eq($lower(%genre%),classical), $set(_GenreFolder,Classique) )
+$if($eq($lower(%genre%),classique), $set(_GenreFolder,Classique) )
+$if($eq($lower(%genre%),classic), $set(_GenreFolder,Classique) )
+
+$if($eq($lower(%genre%),anime soundtrack), $set(_GenreFolder,Anime soundtrack) )
+$if($eq($lower(%genre%),film soundtrack), $set(_GenreFolder,Film soundtrack) )
+$if($eq($lower(%genre%),game soundtrack), $set(_GenreFolder,Game soundtrack) )
+
+$if($eq(%albumartist%,Various artists), $set(_GenreFolder,Compilations) )
+
+
+$noop(3---------------------------------------------------)
+$noop(=== Define subfolders names===)
+$noop(
+    standard namming schema : album artist / Type /date - album name / CD number.track number - track title
+    compilation or Anime or film or game Soundtrack namming schema : Grouping / album name / CD number.track number - track title
+    CD BOX namming schema, ie several CD with their own name and cover : album artist / date - album name / DISC- disknumber - album subtitle / CD number.track number - track title
+    Note : date is based on the "original year" or "year of original date" or "date"
+    Type is based on releasetype : Album, Compilation, Live, Other
+    )
+
+$noop(Define type)
+$set(_DiscType,Other)
+$if($in(%releasetype%,album),$set(_DiscType,Album) )
+$if($in(%releasetype%,compilation),$set(_DiscType,Compilation) )
+$if($in(%releasetype%,live),$set(_DiscType,Live) )
+
+
+$noop(Find the oldest date of the album)
+$set(_OldestAlbumDate,%album%/)
+$if(%originalyear%, $set(_OldestAlbumDate,$left(%originalyear%,4) - %album%/),
+    $if(%originaldate%, $set(_OldestAlbumDate,$left(%originaldate%,4) - %album%/),
+        $if(%date%, $set(_OldestAlbumDate,$left(%date%,4) - %album%/) )
+    )
+)
+
+$noop(If grouping is used
+$set(_Group,$if(%grouping%,%grouping%/))
+)
+$set(_SubFolder,
+    $if2(%albumartist%,%artist%)/%_DiscType%/%_OldestAlbumDate%
+    )
+
+$if($eq(%_GenreFolder%,Compilations), $set(_SubFolder,%album%/) )
+$if($eq(%_GenreFolder%,Anime soundtrack), $set(_SubFolder,%album%/) )
+$if($eq(%_GenreFolder%,Film soundtrack), $set(_SubFolder,%album%/) )
+$if($eq(%_GenreFolder%,Game soundtrack), $set(_SubFolder,%album%/) )
+
+
+
+$noop(4---------------------------------------------------)
+$noop(=== Define BOX name ===)
+
+$set(_BoxFolder,
+    $if(%discsubtitle%,
+        $if(%discnumber%,DISC-$num(%discnumber%,2)-%discsubtitle%/,DISC-%discsubtitle%/)
+        )
+    )
+
+
+
+$noop(5---------------------------------------------------)
+$noop(=== Define filename ===)
+
+$set(_FileName,
+    $if($gt(%totaldiscs%,1),$num(%discnumber%,2).)$num(%tracknumber%,2) - $if($eq(%_GenreFolder%,Classique),$if(%work%,%work% %movementnumber%. %movement%,%title%),%title%))
+
+
+
+$noop(6---------------------------------------------------)
+$noop(=== Print folders and file names ===)
+
+%_RootFolder%/%_GenreFolder%/%_Group%%_SubFolder%%_BoxFolder%%_FileName%
