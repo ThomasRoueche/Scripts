@@ -1,0 +1,4 @@
+List of interresting repositories
+
+https://github.com/getsops/sops - Simple and flexible tool for managing secrets
+
